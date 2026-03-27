@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # E-commerce Backend Scaffold
 
 This repository is set up as a Spring Boot backend starter for an e-commerce system.
@@ -33,3 +34,7 @@ This repository is set up as a Spring Boot backend starter for an e-commerce sys
 3. Add CRUD APIs for products.
 4. Add cart and order APIs.
 5. Add payment service integration.
+=======
+# second-round-assignm-final-13365-chetan
+Final Project Assignment - This repository contains the complete final project code and documentation.
+>>>>>>> 2450cc8642f14969443cb9bde325a8266f7536f5
