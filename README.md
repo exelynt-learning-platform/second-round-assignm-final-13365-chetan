@@ -113,6 +113,15 @@ The `prod` profile expects external environment variables:
 - `SPRING_DATASOURCE_USERNAME`
 - `SPRING_DATASOURCE_PASSWORD`
 
+The default configuration also supports these optional values:
+
+- `DB_URL`
+- `DB_USERNAME`
+- `DB_PASSWORD`
+- `JWT_SECRET`
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+
 ## Run Locally
 
 ### Prerequisites
@@ -148,6 +157,9 @@ mvn test
 ## Important Notes
 
 - Update secrets before production use
+- A default admin account is seeded on startup:
+  - email: `admin@multigenesys.com`
+  - password: `Admin@12345`
 - The current codebase does not include Swagger/OpenAPI wiring yet
 - Generated folders like `.sfdx/` and `target/` should not be committed
 
