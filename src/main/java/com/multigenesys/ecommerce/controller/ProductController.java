@@ -5,6 +5,7 @@ import com.multigenesys.ecommerce.dto.product.ProductRequest;
 import com.multigenesys.ecommerce.entity.Product;
 import com.multigenesys.ecommerce.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
@@ -18,6 +19,7 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public Product create(@Valid @RequestBody ProductRequest request) {
         return productService.create(request);
     }
@@ -33,12 +35,14 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public Product update(@PathVariable Long id,
                           @Valid @RequestBody ProductRequest request) {
         return productService.update(id, request);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String delete(@PathVariable Long id) {
         productService.delete(id);
         return "Product deleted successfully";
