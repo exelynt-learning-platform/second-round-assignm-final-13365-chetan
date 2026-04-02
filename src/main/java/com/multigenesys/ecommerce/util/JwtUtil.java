@@ -14,23 +14,27 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
+    private static final String DEFAULT_SECRET = "change-this-before-production-change-this-before-production";
+    private static final long DEFAULT_EXPIRATION_MS = 86_400_000L;
+
     @Value("${app.jwt.secret}")
-    private String secretValue;
+    private String secretValue = DEFAULT_SECRET;
 
     @Value("${app.jwt.expiration-ms}")
-    private long expirationMsValue;
+    private long expirationMsValue = DEFAULT_EXPIRATION_MS;
 
     private static SecretKey secretKey;
-    private static long expirationMs;
+    private static long expirationMs = DEFAULT_EXPIRATION_MS;
 
     @PostConstruct
     void init() {
-        expirationMs = expirationMsValue;
-        byte[] keyBytes = secretValue.getBytes(StandardCharsets.UTF_8);
-        secretKey = Keys.hmacShaKeyFor(keyBytes);
+        expirationMs = expirationMsValue > 0 ? expirationMsValue : DEFAULT_EXPIRATION_MS;
+        String secret = (secretValue == null || secretValue.isBlank()) ? DEFAULT_SECRET : secretValue;
+        secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
     public static String generateToken(String email) {
+        ensureInitialized();
         Date now = new Date();
         Date expiry = new Date(now.getTime() + expirationMs);
 
@@ -43,6 +47,7 @@ public class JwtUtil {
     }
 
     public static String extractEmail(String token) {
+        ensureInitialized();
         Claims claims = Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
@@ -50,5 +55,12 @@ public class JwtUtil {
                 .getPayload();
 
         return claims.getSubject();
+    }
+
+    private static void ensureInitialized() {
+        if (secretKey == null) {
+            secretKey = Keys.hmacShaKeyFor(DEFAULT_SECRET.getBytes(StandardCharsets.UTF_8));
+            expirationMs = DEFAULT_EXPIRATION_MS;
+        }
     }
 }
