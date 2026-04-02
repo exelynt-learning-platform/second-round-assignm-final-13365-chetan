@@ -1,6 +1,7 @@
 
 package com.multigenesys.ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,12 +12,15 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     private int quantity;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
 
     public CartItem() {

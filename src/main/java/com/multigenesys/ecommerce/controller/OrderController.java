@@ -7,10 +7,17 @@ import com.multigenesys.ecommerce.entity.User;
 import com.multigenesys.ecommerce.exception.UnauthorizedException;
 import com.multigenesys.ecommerce.repository.UserRepository;
 import com.multigenesys.ecommerce.service.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,13 +33,13 @@ public class OrderController {
     private UserRepository userRepository;
 
     @PostMapping("/create")
-    public OrderResponse createOrder(Authentication authentication, @Valid @RequestBody CreateOrderRequest request) {
-        return toResponse(orderService.createOrder(currentUserId(authentication), request));
+    public ResponseEntity<OrderResponse> createOrder(Authentication authentication, @Valid @RequestBody CreateOrderRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(orderService.createOrder(currentUserId(authentication), request)));
     }
 
     @GetMapping("/{orderId}")
-    public OrderResponse getOrder(Authentication authentication, @PathVariable Long orderId) {
-        return toResponse(orderService.getOrder(orderId, currentUserId(authentication)));
+    public ResponseEntity<OrderResponse> getOrder(Authentication authentication, @PathVariable Long orderId) {
+        return ResponseEntity.ok(toResponse(orderService.getOrder(orderId, currentUserId(authentication))));
     }
 
     private Long currentUserId(Authentication authentication) {
